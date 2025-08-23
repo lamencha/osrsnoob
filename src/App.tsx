@@ -1,0 +1,330 @@
+import { useState, useEffect } from 'react';
+import { 
+  MantineProvider, 
+  Container, 
+  Button, 
+  Title, 
+  Text, 
+  Alert,
+  Paper,
+  Box,
+  Loader
+} from '@mantine/core';
+import { IconTerminal, IconSword } from '@tabler/icons-react';
+import { QuestList } from './components/QuestList';
+import { fetchPlayerQuests } from './services/wikiSync';
+import type { PlayerQuestData } from './services/wikiSync';
+import { useQuestRequirements } from './hooks/useQuestRequirements';
+import './App.css';
+
+// Version info
+const APP_VERSION = '1.0.0';
+
+interface TypewriterState {
+  step: number; // 0: not started, 1: title, 2: last updated, 3: sort by, 4: quest cards
+  titleText: string;
+  lastUpdatedText: string;
+  sortByText: string;
+  showQuestCards: boolean;
+}
+
+export default function App() {
+  const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [questData, setQuestData] = useState<PlayerQuestData | null>(null);
+  
+  // Typewriter effect state
+  const [typewriter, setTypewriter] = useState<TypewriterState>({
+    step: 0,
+    titleText: '',
+    lastUpdatedText: '',
+    sortByText: '',
+    showQuestCards: false
+  });
+
+  // Typewriter effect hook
+  useEffect(() => {
+    if (!questData || typewriter.step === 0) return;
+
+    const targetTitle = `Find Next Quest for ${username}`;
+
+    const typeText = (text: string, currentText: string, callback: (newText: string) => void) => {
+      if (currentText.length < text.length) {
+        const nextChar = text.charAt(currentText.length);
+        const newText = currentText + nextChar;
+        callback(newText);
+      }
+    };
+
+    const interval = setInterval(() => {
+      setTypewriter(prev => {
+        const newState = { ...prev };
+        
+        if (prev.step === 1) {
+          // Type the title
+          typeText(targetTitle, prev.titleText, (newText) => {
+            newState.titleText = newText;
+            if (newText === targetTitle) {
+              setTimeout(() => {
+                setTypewriter(s => ({ 
+                  ...s, 
+                  step: 2,
+                  lastUpdatedText: `Last updated: ${new Date(questData.lastUpdated).toLocaleString()}`,
+                  sortByText: 'Sort by: Optimal Order'
+                }));
+              }, 500); // Pause before showing other elements
+            }
+          });
+        } else if (prev.step === 2) {
+          // Show quest cards after a brief delay
+          setTimeout(() => {
+            setTypewriter(s => ({ ...s, step: 3, showQuestCards: true }));
+          }, 300);
+          return { ...prev, step: 3 }; // Skip to step 3
+        }
+        
+        return newState;
+      });
+    }, 50); // Typing speed
+
+    return () => clearInterval(interval);
+  }, [questData, username, typewriter.step]);
+
+  // Focus input on mount
+  useEffect(() => {
+    const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+    input?.focus();
+  }, []);
+  const { requirements: questRequirements, loading: loadingRequirements } = useQuestRequirements();
+
+  // Listen for background updates to quest data
+  useEffect(() => {
+    const handleQuestDataUpdate = (event: CustomEvent<{ username: string, data: PlayerQuestData }>) => {
+      const { username: updatedUsername, data } = event.detail;
+      // Only update if it's for the current user
+      if (username.toLowerCase() === updatedUsername.toLowerCase()) {
+        setQuestData(data);
+      }
+    };
+
+    window.addEventListener('questDataUpdated', handleQuestDataUpdate as EventListener);
+    return () => {
+      window.removeEventListener('questDataUpdated', handleQuestDataUpdate as EventListener);
+    };
+  }, [username]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username) return;
+
+    setLoading(true);
+    setError(null);
+    setQuestData(null);
+    // Reset typewriter state
+    setTypewriter({
+      step: 0,
+      titleText: '',
+      lastUpdatedText: '',
+      sortByText: '',
+      showQuestCards: false
+    });
+    
+    try {
+      const data = await fetchPlayerQuests(username);
+      if (data && data.quests && data.quests.length > 0) {
+        setQuestData(data);
+        // Start typewriter effect
+        setTimeout(() => {
+          setTypewriter(prev => ({ ...prev, step: 1 }));
+        }, 300);
+      } else {
+        setError('No quest data received from the server');
+        setQuestData(null);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      setQuestData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <MantineProvider theme={{ primaryColor: 'blue' }}>
+      <Container size="sm" py="xl" px="md">
+        <Paper shadow="sm" p="xl" radius="md" withBorder>
+          <Box mb="3rem" style={{ textAlign: 'center' }}>
+            <Title order={1} mb="md" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              OSRS NOOB
+              <IconSword size={32} />
+            </Title>
+          </Box>
+          
+          <form onSubmit={handleSubmit}>
+            <Box mb="xl" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              {/* Hidden input for form submission */}
+              <input
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                style={{ position: 'absolute', left: '-9999px' }}
+                autoComplete="off"
+              />
+              {/* Custom terminal-style input display */}
+              <div
+                onClick={() => {
+                  const input = document.querySelector('input[type="text"]') as HTMLInputElement;
+                  input?.focus();
+                }}
+                style={{
+                  width: '100%',
+                  maxWidth: '400px',
+                  marginBottom: '1rem',
+                  padding: '1.5rem 1rem',
+                  background: 'var(--terminal-bg)',
+                  border: '2px solid var(--retro-green)',
+                  borderRadius: 'var(--border-radius)',
+                  fontSize: '1.1rem',
+                  fontFamily: "'Courier New', monospace",
+                  color: username.length > 0 ? 'var(--terminal-green)' : 'rgba(0, 255, 65, 0.6)',
+                  cursor: 'text',
+                  textAlign: 'center',
+                  boxShadow: 'inset 0 0 10px rgba(50, 7, 7, 0.1), 0 0 5px rgba(50, 7, 7, 0.3)',
+                  textShadow: '0 0 5px currentColor'
+                }}
+              >
+                {username.length > 0 ? username : 'Enter your username'}
+                <span className="terminal-cursor" style={{ color: 'var(--retro-green)' }}>_</span>
+              </div>
+              <Button 
+                type="submit" 
+                loading={loading} 
+                size="md"
+                style={{
+                  maxWidth: '400px',
+                  width: '100%'
+                }}
+              >
+                Run
+              </Button>
+            </Box>
+          </form>
+
+          {error && (
+            <Alert 
+              color="red" 
+              title={error.includes('500') ? 'Server Error' : 'Error'} 
+              mb="lg"
+            >
+              {error}
+              <Box mt="md">
+                {(error.includes('not found') || error.includes('data sync') || error.includes('wiki plugin')) && (
+                  <>
+                    <Text size="sm" fw={500}>To use this tracker:</Text>
+                    <Text size="sm" component="div" mt="xs">
+                      1. Install RuneLite if you haven't already
+                    </Text>
+                    <Text size="sm" component="div">
+                      2. Enable the "Wiki" plugin in RuneLite settings
+                    </Text>
+                    <Text size="sm" component="div">
+                      3. Log into OSRS through RuneLite
+                    </Text>
+                    <Text size="sm" component="div">
+                      4. Wait a few minutes for your data to sync
+                    </Text>
+                  </>
+                )}
+                {error.includes('network') && (
+                  <Text size="sm" fw={500}>
+                    Please check your internet connection and try again.
+                  </Text>
+                )}
+                {error.includes('timeout') && (
+                  <>
+                    <Text size="sm" fw={500}>The server is taking longer than expected to respond.</Text>
+                    <Text size="sm">This might be due to high server load. Please try again in a few moments.</Text>
+                  </>
+                )}
+                {error.includes('server error') && (
+                  <>
+                    <Text size="sm" fw={500}>The server is experiencing technical difficulties.</Text>
+                    <Text size="sm">We're automatically retrying your request. If the problem persists, please try again later.</Text>
+                  </>
+                )}
+              </Box>
+            </Alert>
+          )}
+
+          {loadingRequirements ? (
+            <Box ta="center">
+              <Loader size="lg" />
+              <Text mt="md">Loading quest requirements...</Text>
+            </Box>
+          ) : loading ? (
+            <Box ta="center">
+              <Text size="lg" fw={500} mb="md">Loading quest data...</Text>
+              <Text size="sm" c="dimmed">This may take a few moments</Text>
+            </Box>
+          ) : questData ? (
+            <Box>
+              {/* Typewriter effect display */}
+              {typewriter.step >= 1 && (
+                <Box ta="center" mb="lg">
+                  <Title order={3} mb="xs" className="typewriter-text" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                    <IconTerminal size={24} />
+                    {typewriter.titleText}
+                    {typewriter.step === 1 && typewriter.titleText.length < `Find Next Quest for ${username}`.length && (
+                      <span className="terminal-cursor">_</span>
+                    )}
+                  </Title>
+                </Box>
+              )}
+              
+              {typewriter.step >= 2 && (
+                <Box ta="center" mb="lg">
+                  <Text size="sm" className="typewriter-text">
+                    Last updated: <span className="date-text">{new Date(questData.lastUpdated).toLocaleString()}</span>
+                  </Text>
+                </Box>
+              )}
+              
+              {typewriter.step >= 2 && (
+                <Box ta="center" mb="lg">
+                  <Text size="sm" className="typewriter-text">
+                    Sort by: <span className="date-text">Optimal Order</span>
+                  </Text>
+                </Box>
+              )}
+              
+              {typewriter.showQuestCards && questData.quests.length > 0 && (
+                <QuestList 
+                  quests={questData.quests} 
+                  playerLevels={questData.levels}
+                  questRequirements={questRequirements}
+                />
+              )}
+              
+              {typewriter.showQuestCards && questData.quests.length === 0 && (
+                <Box ta="center">
+                  <Text>No quest data available.</Text>
+                </Box>
+              )}
+            </Box>
+          ) : error ? null : (
+            <Box ta="center" mt="xl">
+              <Text size="sm" c="dimmed">Enter your RuneScape username to see your next quest</Text>
+            </Box>
+          )}
+        </Paper>
+      </Container>
+      
+      {/* Version Display */}
+      <div className="version-display">
+        {APP_VERSION}
+      </div>
+    </MantineProvider>
+  )
+}

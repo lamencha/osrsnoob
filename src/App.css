@@ -1,0 +1,841 @@
+:root {
+  --border-radius: 12px;
+  --retro-green: #00ff41;
+  --retro-yellow: #ff6b6b;
+  --retro-pink: #ff6b6b;
+  --terminal-green: #39ff14;
+  --terminal-bg: #0c0c0c;
+  --analog-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+  --scan-line: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.03) 2px,
+    rgba(0, 255, 65, 0.03) 4px
+  );
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+  background-image: var(--scan-line);
+  color: var(--retro-green) !important;
+  display: flex;
+  justify-content: center;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+  animation: flicker 12.3s infinite ease-in-out;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Static analog effects overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at center, transparent 40%, rgba(0, 255, 65, 0.015) 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(0, 255, 65, 0.008) 1px,
+      rgba(0, 255, 65, 0.008) 3px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+  position: relative;
+  z-index: 2;
+}
+
+.mantine-Container-root {
+  max-width: 600px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 1.5rem !important;
+  animation: flicker 8s ease-in-out infinite;
+  position: relative;
+  z-index: 3;
+}
+
+/* Subtle analog interference pattern */
+.mantine-Container-root::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(45deg, transparent 48%, rgba(0, 255, 65, 0.005) 50%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, rgba(255, 107, 107, 0.003) 50%, transparent 52%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Main container styling */
+.mantine-Paper-root {
+  border-radius: var(--border-radius) !important;
+  padding: 2rem !important;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #1a1a1a, #0f0f0f) !important;
+  border: 2px solid var(--retro-green) !important;
+  box-shadow: 
+    var(--analog-shadow),
+    inset 0 1px 0 rgba(0, 255, 65, 0.1),
+    inset 0 -1px 0 rgba(0, 255, 65, 0.1) !important;
+  position: relative;
+  z-index: 4;
+}
+
+/* Static holographic interference pattern */
+.mantine-Paper-root::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(30deg, transparent 49%, rgba(0, 255, 65, 0.008) 50%, transparent 51%),
+    linear-gradient(150deg, transparent 49%, rgba(255, 107, 107, 0.004) 50%, transparent 51%);
+  pointer-events: none;
+  border-radius: var(--border-radius);
+  z-index: 1;
+}
+
+.mantine-Paper-root:not(.ready-to-start-quest):not(.high-level-quest)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--scan-line);
+  pointer-events: none;
+  border-radius: var(--border-radius);
+  z-index: 2;
+}
+
+.mantine-TextInput-input {
+  font-size: 1.1rem;
+  padding: 1.5rem 1rem;
+  background-color: var(--terminal-bg) !important;
+  border: 2px solid var(--retro-green) !important;
+  color: var(--terminal-green) !important;
+  font-family: 'Courier New', monospace !important;
+  box-shadow: 
+    inset 0 0 10px rgba(50, 7, 7, 0.1),
+    0 0 5px rgba(50, 7, 7, 0.3) !important;
+  text-shadow: 0 0 5px currentColor;
+  position: relative;
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 65, 0.01) 2px,
+      rgba(0, 255, 65, 0.01) 4px
+    );
+}
+
+.mantine-TextInput-input:focus {
+  border-color: var(--retro-green) !important;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 255, 65, 0.2),
+    0 0 15px rgba(0, 255, 65, 0.5) !important;
+}
+
+.mantine-TextInput-input::placeholder {
+  color: rgba(0, 255, 65, 0.6) !important;
+  text-shadow: none;
+}
+
+.mantine-TextInput-label {
+  color: #C1C2C5 !important;
+}
+
+.mantine-Button-root {
+  height: 3rem;
+  font-size: 1.1rem;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: var(--terminal-bg) !important;
+  border: 2px solid var(--retro-green) !important;
+  color: var(--retro-green) !important;
+  font-weight: bold;
+  text-shadow: 0 0 5px currentColor !important;
+  box-shadow: 
+    inset 0 0 10px rgba(50, 7, 7, 0.1),
+    0 0 5px rgba(50, 7, 7, 0.3) !important;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button analog scanning effect */
+.mantine-Button-root::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(0, 255, 65, 0.3), 
+    transparent
+  );
+  animation: scanPass 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes scanPass {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: -100%; }
+}
+
+.mantine-Title-root {
+  font-weight: 600;
+  color: var(--retro-yellow) !important;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px currentColor;
+  text-align: center;
+  animation: randomFlicker1 15.7s infinite ease-in-out;
+}
+
+.mantine-Text-root {
+  color: var(--retro-green) !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+.mantine-Text-root[data-c="dimmed"] {
+  color: rgba(0, 255, 65, 0.7) !important;
+}
+
+/* Form and content centering */
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mantine-TextInput-root {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.mantine-TextInput-label {
+  text-align: center;
+  width: 100%;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.mantine-TextInput-input {
+  text-align: center;
+  border-radius: var(--border-radius) !important;
+  transition: all 0.3s ease;
+}
+
+.mantine-TextInput-input:focus {
+  transform: scale(1.02);
+}
+
+.mantine-Button-root {
+  margin: 1rem auto;
+  display: block;
+  min-width: 200px;
+  border-radius: var(--border-radius) !important;
+  transition: all 0.3s ease;
+}
+
+.mantine-Button-root:hover {
+  border-color: var(--retro-green) !important;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 255, 65, 0.2),
+    0 0 15px rgba(0, 255, 65, 0.5) !important;
+  transform: scale(1.02);
+}
+
+/* Button active/press state */
+.mantine-Button-root:active {
+  border-color: var(--retro-green) !important;
+  transform: scale(0.98) !important;
+  box-shadow: 
+    inset 0 0 15px rgba(0, 255, 65, 0.3),
+    0 0 10px rgba(0, 255, 65, 0.4) !important;
+}
+
+.mantine-Alert-root {
+  text-align: center;
+  max-width: 400px;
+  margin: 1rem auto;
+  border-radius: var(--border-radius) !important;
+}
+
+.mantine-Paper-root {
+  text-align: center;
+}
+
+.quest-list {
+  max-width: 400px;
+  margin: 0 auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.quest-list .mantine-Paper-root {
+  border-radius: calc(var(--border-radius) - 4px) !important;
+  transition: all 0.2s ease;
+}
+
+.quest-list .mantine-Paper-root:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.mantine-Badge-root {
+  border-radius: calc(var(--border-radius) - 6px) !important;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid currentColor !important;
+  box-shadow: 0 0 5px currentColor;
+  background: rgba(0, 0, 0, 0.3) !important;
+  font-weight: bold;
+}
+
+/* Additional retro effects */
+.mantine-Paper-root {
+  position: relative;
+  overflow: hidden;
+}
+
+.mantine-Paper-root:not(.ready-to-start-quest):not(.high-level-quest)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 0, 0.015) 2px,
+      rgba(0, 255, 0, 0.015) 4px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(0, 255, 65, 0.008) 1px,
+      rgba(0, 255, 65, 0.008) 3px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.mantine-Paper-root > * {
+  position: relative;
+  z-index: 5;
+}
+
+/* Terminal prompt style for titles */
+.mantine-Title-root::before {
+  content: '◢ ';
+  color: var(--retro-yellow);
+  font-family: 'Courier New', monospace;
+  text-shadow: none !important;
+}
+
+/* Remove triangle from typewriter text (Find Next Quest) */
+.typewriter-text.mantine-Title-root::before {
+  content: '';
+}
+
+/* Add glow to text inputs when focused */
+.mantine-TextInput-input:focus {
+  box-shadow: 
+    0 0 0 2px var(--retro-green),
+    0 0 10px var(--retro-green),
+    inset 0 0 10px rgba(50, 7, 7, 0.1) !important;
+}
+
+/* CRT flicker animation */
+@keyframes flicker {
+  0%, 85%, 100% { opacity: 1; }
+  87%, 89%, 92% { opacity: 0.97; }
+  88%, 90% { opacity: 0.99; }
+}
+
+@keyframes textFlicker {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.96; }
+  94% { opacity: 0.98; }
+  95% { opacity: 0.94; }
+  96% { opacity: 1; }
+}
+
+@keyframes borderPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(50, 7, 7, 0.4), inset 0 0 10px rgba(50, 7, 7, 0.1);
+    border-color: var(--retro-green);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(50, 7, 7, 0.6), inset 0 0 15px rgba(50, 7, 7, 0.2);
+    border-color: #66ffff;
+  }
+}
+
+/* Ready to start quest styling */
+.ready-to-start-quest.mantine-Paper-root {
+  border: 2px dashed var(--retro-green) !important;
+  box-shadow: 0 0 15px rgba(50, 7, 7, 0.4), inset 0 0 10px rgba(50, 7, 7, 0.1) !important;
+  animation: borderPulse 2s ease-in-out infinite;
+}
+
+.high-level-quest.mantine-Paper-root {
+  border: 2px solid #ff6b6b !important;
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.3) !important;
+}
+
+/* Quest title styling */
+.quest-title {
+  position: relative;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: var(--retro-pink) !important;
+  text-shadow: 
+    0 0 10px var(--retro-pink),
+    0 0 20px var(--retro-pink),
+    0 0 30px var(--retro-pink) !important;
+  animation: textGlow 2.5s ease-in-out infinite, randomFlicker1 12s infinite ease-in-out !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+/* Quest card border styling - only for main quest cards, not nested components */
+.quest-list > div > .mantine-Paper-root:not(.ready-to-start-quest):not(.high-level-quest) {
+  border: 2px dashed var(--retro-green) !important;
+  box-shadow: 0 0 10px rgba(50, 7, 7, 0.3), inset 0 0 5px rgba(50, 7, 7, 0.1) !important;
+  animation: borderPulse 3s ease-in-out infinite !important;
+}
+
+/* Remove hover effects and borders from nested Paper components */
+.quest-list .ready-to-start-quest.mantine-Paper-root,
+.quest-list .high-level-quest.mantine-Paper-root {
+  border: none !important;
+  box-shadow: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+.quest-list .ready-to-start-quest.mantine-Paper-root:hover,
+.quest-list .high-level-quest.mantine-Paper-root:hover {
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Remove all borders from ready-to-start quest sections (when used as nested components) */
+.nested-quest-info.ready-to-start-quest.mantine-Paper-root {
+  border: none !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+/* Nested quest info components should be completely transparent */
+.nested-quest-info.mantine-Paper-root {
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  animation: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important; /* Remove all padding to allow full-width boxes */
+}
+
+/* Remove hover effects from nested quest info components */
+.nested-quest-info.mantine-Paper-root:hover {
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.high-level-quest.mantine-Paper-root {
+  border: 2px solid #ff6b6b !important;
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.3) !important;
+}
+
+@keyframes randomFlicker1 {
+  0%, 89%, 100% { opacity: 1; }
+  90% { opacity: 0.95; }
+  91% { opacity: 0.98; }
+  92% { opacity: 0.96; }
+}
+
+@keyframes randomFlicker2 {
+  0%, 77%, 100% { opacity: 1; }
+  78% { opacity: 0.97; }
+  79% { opacity: 0.99; }
+  80%, 82% { opacity: 0.95; }
+  81% { opacity: 1; }
+}
+
+@keyframes textGlow {
+  0%, 100% { 
+    text-shadow: 
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 30px currentColor;
+  }
+  50% { 
+    text-shadow: 
+      0 0 15px currentColor,
+      0 0 25px currentColor,
+      0 0 35px currentColor,
+      0 0 45px currentColor;
+  }
+}
+
+.mantine-Title-root {
+  animation: textGlow 3s ease-in-out infinite;
+}
+
+/* Terminal cursor animation */
+.terminal-cursor {
+  animation: blink 1s infinite;
+  color: var(--retro-green) !important;
+  font-weight: bold;
+}
+
+/* Typewriter text styling */
+.typewriter-text {
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace !important;
+  color: var(--retro-green) !important;
+  text-shadow: 0 0 5px currentColor !important;
+}
+
+/* Date text styling */
+.date-text {
+  color: var(--retro-pink) !important;
+  text-shadow: 0 0 5px currentColor !important;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Access Status Animations */
+.access-denied-text {
+  color: #ff0000 !important;
+  text-shadow: 0 0 10px #ff0000 !important;
+}
+
+.access-granted-text {
+  color: #00ff41 !important;
+  text-shadow: 0 0 10px #00ff41 !important;
+}
+
+/* Hide input text completely for custom overlay */
+.mantine-TextInput-input {
+  color: transparent !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.mantine-TextInput-input::selection {
+  background: transparent !important;
+}
+
+.mantine-TextInput-input::-webkit-input-placeholder {
+  color: transparent !important;
+}
+
+.mantine-TextInput-input::-moz-placeholder {
+  color: transparent !important;
+}
+
+.mantine-TextInput-input:-ms-input-placeholder {
+  color: transparent !important;
+}
+.mantine-Badge-root[data-variant="completed"] {
+  color: var(--retro-green) !important;
+  border-color: var(--retro-green) !important;
+  box-shadow: 0 0 8px var(--retro-green) !important;
+  animation: randomFlicker2 18.2s infinite ease-in-out;
+}
+
+.mantine-Badge-root[data-variant="available"] {
+  color: var(--retro-green) !important;
+  border-color: var(--retro-green) !important;
+  box-shadow: 0 0 8px var(--retro-green) !important;
+  animation: textFlicker 21.5s infinite ease-in-out;
+}
+
+.mantine-Badge-root[data-variant="locked"] {
+  color: #ff6b6b !important;
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 8px #ff6b6b !important;
+  animation: randomFlicker1 19.8s infinite ease-in-out;
+}
+
+.mantine-Badge-root[data-variant="in-progress"] {
+  color: #ffd43b !important;
+  border-color: #ffd43b !important;
+  box-shadow: 0 0 8px #ffd43b !important;
+  animation: randomFlicker2 16.3s infinite ease-in-out;
+}
+
+/* Disable hover effects on Paper components */
+.mantine-Paper-root:hover {
+  transform: none !important;
+  box-shadow: var(--paper-shadow) !important;
+  background-color: #25262B !important;
+}
+
+/* Quest card specific styling */
+.quest-list .mantine-Paper-root {
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Override Mantine Badge border for checkmark */
+.mantine-Badge-root[data-color="pink"] {
+  border: none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* More specific override for the exact class */
+.m_347db0ec.mantine-Badge-root {
+  border: none !important;
+  border-width: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Responsive adjustments */
+
+/* Tablet and small desktop */
+@media (max-width: 768px) {
+  .mantine-Container-root {
+    padding: 1rem !important;
+  }
+  
+  .quest-list {
+    gap: 0.875rem;
+  }
+  
+  .quest-title {
+    font-size: 1.25rem !important;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 600px) {
+  :root {
+    --border-radius: 6px;
+  }
+
+  body {
+    padding: 0;
+  }
+
+  #root {
+    padding: 0.5rem 0;
+  }
+
+  .mantine-Container-root {
+    padding: 0.5rem !important;
+    max-width: 100% !important;
+  }
+  
+  .mantine-Paper-root {
+    padding: 1rem !important;
+    border-radius: var(--border-radius) !important;
+    margin: 0 !important;
+  }
+
+  .mantine-Button-root {
+    width: 100%;
+    max-width: none;
+    font-size: 1rem;
+    height: 2.5rem;
+  }
+
+  .quest-list {
+    gap: 0.75rem;
+    max-width: 100%;
+  }
+
+  .mantine-TextInput-input {
+    font-size: 1rem;
+    padding: 1rem 0.75rem;
+  }
+
+  .mantine-TextInput-root {
+    max-width: 100%;
+  }
+
+  .quest-title {
+    font-size: 1.125rem !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  /* Make all interactive elements touch-friendly */
+  .mantine-Badge-root {
+    min-height: 32px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  /* Improve touch targets for quest cards */
+  .quest-list .mantine-Paper-root {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Better mobile line height for readability */
+  .mantine-Text-root {
+    line-height: 1.4 !important;
+  }
+
+  /* Make skill guide buttons more touch-friendly */
+  button[style*="backgroundColor: '#ff6b6b'"],
+  button[style*="backgroundColor: 'var(--retro-green')"] {
+    min-width: 120px !important;
+    height: 44px !important;
+    padding: 10px 16px !important;
+    font-size: 12px !important;
+    margin: 4px !important;
+  }
+
+  /* Better mobile text sizing */
+  .mantine-Title-root {
+    font-size: 1.5rem !important;
+  }
+
+  .mantine-Text-root {
+    font-size: 0.9rem !important;
+  }
+
+  /* Improve mobile spacing for requirement sections */
+  .nested-quest-info .mantine-Paper-root {
+    margin: 0.5rem 0 !important;
+  }
+}
+
+/* Very small mobile phones */
+@media (max-width: 375px) {
+  :root {
+    --border-radius: 4px;
+  }
+
+  .mantine-Container-root {
+    padding: 0.25rem !important;
+  }
+
+  .mantine-Paper-root {
+    padding: 0.75rem !important;
+  }
+
+  .quest-title {
+    font-size: 1rem !important;
+  }
+
+  .mantine-Title-root {
+    font-size: 1.25rem !important;
+  }
+
+  .quest-list {
+    gap: 0.5rem;
+  }
+
+  /* Stack skill buttons vertically on very small screens */
+  button[style*="backgroundColor: '#ff6b6b'"],
+  button[style*="backgroundColor: 'var(--retro-green')"] {
+    width: 100% !important;
+    min-width: auto !important;
+    margin: 2px 0 !important;
+  }
+}
+
+/* Dark mode overrides */
+.mantine-Alert-root {
+  background-color: #1A1B1E !important;
+  border-color: #373A40 !important;
+}
+
+.mantine-Alert-title {
+  color: #C1C2C5 !important;
+}
+
+.mantine-Badge-root {
+  background-color: transparent !important;
+}
+
+/* Version display */
+.version-display {
+  position: fixed;
+  bottom: 10px;
+  right: 15px;
+  font-family: 'Courier New', monospace !important;
+  font-size: 12px !important;
+  color: rgba(0, 255, 65, 0.7) !important;
+  text-shadow: 0 0 5px rgba(0, 255, 65, 0.5) !important;
+  z-index: 1000;
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: randomFlicker2 25.7s infinite ease-in-out;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.version-display::before {
+  content: 'v';
+  color: rgba(255, 107, 107, 0.6) !important;
+  text-shadow: 0 0 5px rgba(255, 107, 107, 0.4) !important;
+}
+
+/* Mobile version positioning */
+@media (max-width: 600px) {
+  .version-display {
+    bottom: 5px;
+    right: 10px;
+    font-size: 11px !important;
+    padding: 3px 6px;
+  }
+}
