@@ -8,7 +8,8 @@ import {
   Alert,
   Paper,
   Box,
-  Loader
+  Loader,
+  Checkbox
 } from '@mantine/core';
 import { IconTerminal } from '@tabler/icons-react';
 import { QuestList } from './components/QuestList';
@@ -33,10 +34,22 @@ interface TypewriterState {
 
 export default function App() {
   const [username, setUsername] = useState('');
+  const [rememberUsername, setRememberUsername] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [questData, setQuestData] = useState<PlayerQuestData | null>(null);
   const [showCompletion, setShowCompletion] = useState(false);
+  
+  // Load saved username and remember setting on app start
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('osrsnoob-username');
+    const savedRememberSetting = localStorage.getItem('osrsnoob-remember-username');
+    
+    if (savedUsername && savedRememberSetting === 'true') {
+      setUsername(savedUsername);
+      setRememberUsername(true);
+    }
+  }, []);
   
   // Typewriter effect state
   const [typewriter, setTypewriter] = useState<TypewriterState>({
@@ -180,9 +193,37 @@ export default function App() {
     };
   }, [username]);
 
+  // Handle remember username functionality
+  const handleRememberUsernameChange = (checked: boolean) => {
+    setRememberUsername(checked);
+    localStorage.setItem('osrsnoob-remember-username', checked.toString());
+    
+    if (checked && username) {
+      // Save current username
+      localStorage.setItem('osrsnoob-username', username);
+    } else if (!checked) {
+      // Clear saved username
+      localStorage.removeItem('osrsnoob-username');
+    }
+  };
+
+  const handleUsernameChange = (newUsername: string) => {
+    setUsername(newUsername);
+    
+    // If remember is enabled, save immediately
+    if (rememberUsername) {
+      localStorage.setItem('osrsnoob-username', newUsername);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username) return;
+
+    // Save username if remember is enabled
+    if (rememberUsername) {
+      localStorage.setItem('osrsnoob-username', username);
+    }
 
     setLoading(true);
     setError(null);
@@ -233,7 +274,7 @@ export default function App() {
                 type="text"
                 required
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => handleUsernameChange(e.target.value)}
                 style={{ position: 'absolute', left: '-9999px' }}
                 autoComplete="off"
               />
@@ -263,6 +304,27 @@ export default function App() {
                 {username.length > 0 ? username : 'Enter your username'}
                 <span className="terminal-cursor" style={{ color: 'var(--retro-green)' }}>_</span>
               </div>
+              
+              {/* Remember username checkbox with label on top */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1rem' }}>
+                <Text 
+                  size="sm" 
+                  mb="xs" 
+                  style={{ 
+                    color: 'var(--retro-green)', 
+                    fontFamily: "'Courier New', monospace",
+                    textShadow: '0 0 3px var(--retro-green)'
+                  }}
+                >
+                  Remember username
+                </Text>
+                <Checkbox
+                  checked={rememberUsername}
+                  onChange={(event) => handleRememberUsernameChange(event.currentTarget.checked)}
+                  label=""
+                />
+              </div>
+              
               <Button 
                 type="submit" 
                 loading={loading} 

@@ -831,3 +831,101 @@ form {
     padding: 3px 6px;
   }
 }
+
+/* Custom checkbox styling to match terminal theme */
+.mantine-Checkbox-root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.75rem 0;
+}
+
+.mantine-Checkbox-inner {
+  position: relative;
+}
+
+.mantine-Checkbox-input {
+  width: 18px !important;
+  height: 18px !important;
+  border: 2px solid var(--retro-green) !important;
+  background-color: var(--terminal-bg) !important;
+  border-radius: 2px !important;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.mantine-Checkbox-input:checked {
+  background-color: var(--terminal-bg) !important;
+  border-color: var(--retro-green) !important;
+  box-shadow: 0 0 8px var(--retro-green) !important;
+}
+
+.mantine-Checkbox-input:checked::before {
+  content: '[x]' !important;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff6b6b !important;
+  -webkit-text-fill-color: #ff6b6b !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  text-shadow: 0 0 5px #ff6b6b !important;
+  animation: randomFlicker3 12.3s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.mantine-Checkbox-input:hover {
+  border-color: var(--retro-green) !important;
+  box-shadow: 0 0 5px var(--retro-green) !important;
+}
+
+.mantine-Checkbox-label {
+  color: var(--retro-green) !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.9rem !important;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  text-shadow: 0 0 3px var(--retro-green) !important;
+}
+
+/* Hide the default Mantine checkmark icon */
+.mantine-Checkbox-icon {
+  display: none !important;
+}
+
+/* Remember username checkbox styling */
+.mantine-Checkbox-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mantine-Checkbox-input {
+  border: 2px solid var(--retro-green) !important;
+  background-color: var(--terminal-bg) !important;
+  border-radius: 2px !important;
+}
+
+.mantine-Checkbox-input:checked {
+  background-color: var(--retro-green) !important;
+  border-color: var(--retro-green) !important;
+}
+
+.mantine-Checkbox-input:checked::before {
+  color: var(--terminal-bg) !important;
+}
+
+.mantine-Checkbox-label {
+  color: var(--retro-green) !important;
+  font-family: 'Courier New', monospace !important;
+  text-shadow: 0 0 3px currentColor !important;
+  margin-left: 0.5rem !important;
+}
+
+.mantine-Checkbox-input:focus {
+  box-shadow: 0 0 0 2px var(--retro-green) !important;
+}
