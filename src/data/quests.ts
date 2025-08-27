@@ -214,11 +214,14 @@ export const quests: Quest[] = [
             skills: { "Farming": 17 }
         }
     },
-    { name: "Recipe for Disaster/Another Cook's Quest" },
-    { name: "Recipe for Disaster/Freeing the Goblin generals" },
+    {
+        name: "Recipe for Disaster",
+        requirements: {
+            skills: { "Cooking": 70, "Agility": 48, "Mining": 50, "Fishing": 53, "Thieving": 53, "Herblore": 25, "Magic": 59, "Ranged": 50, "Firemaking": 50, "Woodcutting": 61, "Smithing": 40 }
+        }
+    },
     { name: "Sea Slug" },
     { name: "Fishing Contest" },
-    { name: "Recipe for Disaster/Freeing the Mountain Dwarf" },
     {
         name: "Mountain Daughter",
         requirements: {
@@ -442,8 +445,6 @@ export const quests: Quest[] = [
             skills: { "Construction": 20, "Agility": 40, "Woodcutting": 56 }
         }
     },
-    { name: "Recipe for Disaster/Freeing Evil Dave" },
-    { name: "Recipe for Disaster/Freeing Pirate Pete" },
     {
         name: "Tai Bwo Wannai Trio",
         requirements: {
@@ -523,8 +524,6 @@ export const quests: Quest[] = [
         }
     },
     { name: "Meat and Greet" },
-    { name: "Recipe for Disaster/Freeing the Lumbridge Guide" },
-    { name: "Recipe for Disaster/Freeing Skrach Uglogwee" },
     {
         name: "Heroes' Quest",
         requirements: {
@@ -619,7 +618,6 @@ export const quests: Quest[] = [
         }
     },
     { name: "Land of the Goblins" },
-    { name: "Recipe for Disaster/Freeing Sir Amik Varze" },
     { name: "Olaf's Quest" },
     { name: "A Kingdom Divided" },
     {
@@ -648,8 +646,6 @@ export const quests: Quest[] = [
             skills: { "Herblore": 57, "Farming": 49, "Thieving": 40 }
         }
     },
-    { name: "Recipe for Disaster/Freeing King Awowogei" },
-    { name: "Recipe for Disaster/Defeating the Culinaromancer" },
     { name: "Perilous Moons" },
     { name: "The Path of Glouphrie" },
     { name: "The Heart of Darkness" },
