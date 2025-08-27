@@ -392,7 +392,10 @@ export default function App() {
       </div>
 
       {/* Quest Completion Screen */}
-      <QuestCompletion isVisible={showCompletion} />
+      <QuestCompletion 
+        isVisible={showCompletion} 
+        onClose={() => setShowCompletion(false)} 
+      />
     </MantineProvider>
   )
 }

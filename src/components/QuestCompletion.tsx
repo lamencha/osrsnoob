@@ -1,11 +1,13 @@
-import { Box, Text, Stack, Center } from '@mantine/core';
+import { Box, Text, Stack, Center, ActionIcon } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 
 interface QuestCompletionProps {
     isVisible: boolean;
+    onClose?: () => void;
 }
 
-export function QuestCompletion({ isVisible }: QuestCompletionProps) {
+export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
     const [showMessage, setShowMessage] = useState(false);
     const [showArt, setShowArt] = useState(false);
     
@@ -17,8 +19,18 @@ export function QuestCompletion({ isVisible }: QuestCompletionProps) {
                 clearTimeout(timer1);
                 clearTimeout(timer2);
             };
+        } else {
+            // Reset state when hidden
+            setShowMessage(false);
+            setShowArt(false);
         }
     }, [isVisible]);
+
+    const handleClose = () => {
+        if (onClose) {
+            onClose();
+        }
+    };
 
     if (!isVisible) return null;
 
@@ -50,6 +62,7 @@ export function QuestCompletion({ isVisible }: QuestCompletionProps) {
 
     return (
         <Box 
+            onClick={handleClose}
             style={{
                 position: 'fixed',
                 top: 0,
@@ -61,10 +74,41 @@ export function QuestCompletion({ isVisible }: QuestCompletionProps) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backdropFilter: 'blur(5px)'
+                backdropFilter: 'blur(5px)',
+                cursor: 'pointer'
             }}
         >
-            <Center>
+            {/* Close button for mobile/desktop */}
+            <ActionIcon
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleClose();
+                }}
+                size="lg"
+                variant="subtle"
+                color="gray"
+                style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    zIndex: 10000,
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#888',
+                    transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                    e.currentTarget.style.color = '#fff';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.color = '#888';
+                }}
+            >
+                <IconX size={20} />
+            </ActionIcon>
+
+            <Center onClick={(e) => e.stopPropagation()}>
                 <Stack align="center" gap="xl" style={{ maxWidth: '90vw', textAlign: 'center' }}>
                     {showMessage && (
                         <>
@@ -133,7 +177,7 @@ export function QuestCompletion({ isVisible }: QuestCompletionProps) {
                                 animation: 'fadeIn 3s ease-in-out 3s both'
                             }}
                         >
-                            Press [ESC] to return to terminal...
+                            Press [ESC] or tap anywhere to return to terminal...
                         </Text>
                     )}
                 </Stack>
