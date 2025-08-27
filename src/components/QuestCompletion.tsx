@@ -1,5 +1,4 @@
-import { Box, Text, Stack, Center, ActionIcon } from '@mantine/core';
-import { IconX } from '@tabler/icons-react';
+import { Box, Text, Stack, Center } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
 interface QuestCompletionProps {
@@ -78,35 +77,45 @@ export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
                 cursor: 'pointer'
             }}
         >
-            {/* Close button for mobile/desktop */}
-            <ActionIcon
+            {/* Close button for mobile/desktop - Terminal Style */}
+            <Box
                 onClick={(e) => {
                     e.stopPropagation();
                     handleClose();
                 }}
-                size="lg"
-                variant="subtle"
-                color="gray"
                 style={{
                     position: 'absolute',
                     top: '20px',
                     right: '20px',
                     zIndex: 10000,
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    fontFamily: 'monospace',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
                     color: '#888',
-                    transition: 'all 0.3s ease'
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    border: '1px solid #444',
+                    borderRadius: '4px',
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    userSelect: 'none',
+                    letterSpacing: '1px'
                 }}
                 onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.color = '#fff';
+                    e.currentTarget.style.color = '#00ff00';
+                    e.currentTarget.style.borderColor = '#00ff00';
+                    e.currentTarget.style.textShadow = '0 0 5px #00ff00';
+                    e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.3)';
                 }}
                 onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
                     e.currentTarget.style.color = '#888';
+                    e.currentTarget.style.borderColor = '#444';
+                    e.currentTarget.style.textShadow = 'none';
+                    e.currentTarget.style.boxShadow = 'none';
                 }}
             >
-                <IconX size={20} />
-            </ActionIcon>
+                [X] CLOSE
+            </Box>
 
             <Center onClick={(e) => e.stopPropagation()}>
                 <Stack align="center" gap="xl" style={{ maxWidth: '90vw', textAlign: 'center' }}>
@@ -174,10 +183,11 @@ export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
                                 fontFamily: 'monospace',
                                 color: '#888',
                                 marginTop: '2rem',
-                                animation: 'fadeIn 3s ease-in-out 3s both'
+                                animation: 'fadeIn 3s ease-in-out 3s both',
+                                letterSpacing: '0.5px'
                             }}
                         >
-                            Press [ESC] or tap anywhere to return to terminal...
+                            [ESC] or [TAP_ANYWHERE] to return to terminal...
                         </Text>
                     )}
                 </Stack>
