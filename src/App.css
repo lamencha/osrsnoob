@@ -365,14 +365,6 @@ form {
   z-index: 5;
 }
 
-/* Terminal prompt style for titles */
-.mantine-Title-root::before {
-  content: '◢ ';
-  color: var(--retro-yellow);
-  font-family: 'Courier New', monospace;
-  text-shadow: none !important;
-}
-
 /* Remove triangle from typewriter text (Find Next Quest) */
 .typewriter-text.mantine-Title-root::before {
   content: '';

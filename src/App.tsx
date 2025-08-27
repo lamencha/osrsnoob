@@ -10,7 +10,7 @@ import {
   Box,
   Loader
 } from '@mantine/core';
-import { IconTerminal, IconSword } from '@tabler/icons-react';
+import { IconTerminal } from '@tabler/icons-react';
 import { QuestList } from './components/QuestList';
 import { fetchPlayerQuests } from './services/wikiSync';
 import type { PlayerQuestData } from './services/wikiSync';
@@ -156,8 +156,7 @@ export default function App() {
         <Paper shadow="sm" p="xl" radius="md" withBorder>
           <Box mb="3rem" style={{ textAlign: 'center' }}>
             <Title order={1} mb="md" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-              OSRS NOOB
-              <IconSword size={32} />
+              ◢ OSRS NOOB ◣
             </Title>
           </Box>
           

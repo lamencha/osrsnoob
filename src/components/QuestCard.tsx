@@ -63,7 +63,7 @@ function AnimatedAccessStatus({ onAccessGranted }: { onAccessGranted?: () => voi
             }}
             className={showDenied ? 'access-denied-text' : 'access-granted-text'}
         >
-            {showDenied ? '⚠ ACCESS_DENIED ⚠' : '✓ ACCESS_GRANTED ✓'}
+            {showDenied ? '⚠ ACCESS_DENIED ⚠' : '[x] ACCESS_GRANTED [x]'}
         </Text>
     );
 }
@@ -454,7 +454,7 @@ export function QuestCard({ quest, playerLevels, quests, questRequirements }: Qu
                                                 fontSize: '16px'
                                             }}
                                         >
-                                            ✓
+                                            [x]
                                         </Badge>
                                         <Text fw={700} size="lg" c="green">Ready to start!</Text>
                                     </Box>
@@ -559,7 +559,7 @@ export function QuestCard({ quest, playerLevels, quests, questRequirements }: Qu
                                                                     fontWeight: 'bold'
                                                                 }}
                                                             >
-                                                                STATUS: ✓ SATISFIED
+                                                                STATUS: [x] SATISFIED
                                                             </Text>
                                                         </Box>
                                                         <button
@@ -631,7 +631,7 @@ export function QuestCard({ quest, playerLevels, quests, questRequirements }: Qu
                                                             fontFamily: "'Courier New', monospace"
                                                         }}
                                                     >
-                                                        REQUIRED: {prereq} | STATUS: ✓_COMPLETED
+                                                        REQUIRED: {prereq} | STATUS: [x]_COMPLETED
                                                     </Text>
                                                 </Box>
                                             ))}
