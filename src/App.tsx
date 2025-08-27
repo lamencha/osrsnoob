@@ -25,10 +25,11 @@ import './App.css';
 const APP_VERSION = '1.0.0';
 
 interface TypewriterState {
-  step: number; // 0: not started, 1: title, 2: last updated, 3: sort by, 4: quest cards
+  step: number; // 0: not started, 1: title, 2: last updated, 3: sort by, 4: level, 5: quest cards
   titleText: string;
   lastUpdatedText: string;
   sortByText: string;
+  levelText: string;
   showQuestCards: boolean;
 }
 
@@ -57,6 +58,7 @@ export default function App() {
     titleText: '',
     lastUpdatedText: '',
     sortByText: '',
+    levelText: '',
     showQuestCards: false
   });
 
@@ -86,19 +88,36 @@ export default function App() {
               setTimeout(() => {
                 setTypewriter(s => ({ 
                   ...s, 
-                  step: 2,
-                  lastUpdatedText: `Last updated: ${new Date(questData.lastUpdated).toLocaleString()}`,
-                  sortByText: 'Sort by: Optimal Order'
+                  step: 2
                 }));
               }, 500); // Pause before showing other elements
             }
           });
-        } else if (prev.step === 2) {
+                } else if (prev.step === 2) {
+          // Type the level text
+          const completedQuests = questData ? questData.quests.filter(q => q.status === 'COMPLETE').length : 0;
+          const totalQuests = questData ? filterOutMiniQuests(questData.quests).length : 0;
+          const levelText = `Level: ${completedQuests} / ${totalQuests}`;
+          
+          typeText(levelText, prev.levelText, (newText) => {
+            newState.levelText = newText;
+            if (newText === levelText) {
+              setTimeout(() => {
+                setTypewriter(s => ({ 
+                  ...s, 
+                  step: 3,
+                  lastUpdatedText: `Last updated: ${new Date(questData.lastUpdated).toLocaleString()}`,
+                  sortByText: 'Sort by: Optimal Order'
+                }));
+              }, 300);
+            }
+          });
+        } else if (prev.step === 3) {
           // Show quest cards after a brief delay
           setTimeout(() => {
-            setTypewriter(s => ({ ...s, step: 3, showQuestCards: true }));
+            setTypewriter(s => ({ ...s, step: 4, showQuestCards: true }));
           }, 300);
-          return { ...prev, step: 3 }; // Skip to step 3
+          return { ...prev, step: 4 }; // Skip to step 4
         }
         
         return newState;
@@ -234,6 +253,7 @@ export default function App() {
       titleText: '',
       lastUpdatedText: '',
       sortByText: '',
+      levelText: '',
       showQuestCards: false
     });
     
@@ -422,6 +442,17 @@ export default function App() {
                 <Box ta="center" mb="lg">
                   <Text size="sm" className="typewriter-text">
                     Sort by: <span className="date-text">Optimal Order</span>
+                  </Text>
+                </Box>
+              )}
+
+              {/* Quest Progress Tracker */}
+              {typewriter.step >= 4 && questData && (
+                <Box ta="center" mb="lg">
+                  <Text size="sm" className="typewriter-text">
+                    Level: <span className="date-text">
+                      {questData.quests.filter(q => q.status === 'COMPLETE').length} / {filterOutMiniQuests(quests).length}
+                    </span>
                   </Text>
                 </Box>
               )}
