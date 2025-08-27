@@ -12,9 +12,11 @@ import {
 } from '@mantine/core';
 import { IconTerminal } from '@tabler/icons-react';
 import { QuestList } from './components/QuestList';
+import { QuestCompletion } from './components/QuestCompletion';
 import { fetchPlayerQuests } from './services/wikiSync';
 import type { PlayerQuestData } from './services/wikiSync';
 import { useQuestRequirements } from './hooks/useQuestRequirements';
+import { quests } from './data/quests';
 import './App.css';
 
 // Version info
@@ -33,6 +35,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [questData, setQuestData] = useState<PlayerQuestData | null>(null);
+  const [showCompletion, setShowCompletion] = useState(false);
   
   // Typewriter effect state
   const [typewriter, setTypewriter] = useState<TypewriterState>({
@@ -97,6 +100,55 @@ export default function App() {
     input?.focus();
   }, []);
   const { requirements: questRequirements, loading: loadingRequirements } = useQuestRequirements();
+
+  // Check if all quests are completed
+  const checkAllQuestsComplete = (questData: PlayerQuestData): boolean => {
+    if (!questData || !questData.quests) return false;
+    
+    // Get list of completed quest names
+    const completedQuests = new Set(questData.quests.map(q => q.name.toLowerCase()));
+    
+    // Check if all quests from our data are completed
+    return quests.every(quest => completedQuests.has(quest.name.toLowerCase()));
+  };
+
+  // Effect to check for completion when quest data changes
+  useEffect(() => {
+    if (questData && checkAllQuestsComplete(questData)) {
+      // Delay showing completion screen for dramatic effect
+      setTimeout(() => {
+        setShowCompletion(true);
+      }, 2000);
+    } else {
+      setShowCompletion(false);
+    }
+  }, [questData]);
+
+  // Handle escape key to close completion screen
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && showCompletion) {
+        setShowCompletion(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, [showCompletion]);
+
+  // Easter egg: Konami code or special combination to show completion screen
+  useEffect(() => {
+    const handleKeyCombo = (event: KeyboardEvent) => {
+      // Ctrl + Shift + G for "Grass" 🌱
+      if (event.ctrlKey && event.shiftKey && event.key === 'G') {
+        setShowCompletion(true);
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyCombo);
+    return () => window.removeEventListener('keydown', handleKeyCombo);
+  }, []);
 
   // Listen for background updates to quest data
   useEffect(() => {
@@ -324,6 +376,9 @@ export default function App() {
       <div className="version-display">
         {APP_VERSION}
       </div>
+
+      {/* Quest Completion Screen */}
+      <QuestCompletion isVisible={showCompletion} />
     </MantineProvider>
   )
 }
