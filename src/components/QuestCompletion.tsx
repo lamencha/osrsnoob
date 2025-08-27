@@ -102,10 +102,10 @@ export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
                     letterSpacing: '1px'
                 }}
                 onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#00ff00';
-                    e.currentTarget.style.borderColor = '#00ff00';
-                    e.currentTarget.style.textShadow = '0 0 5px #00ff00';
-                    e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.3)';
+                    e.currentTarget.style.color = '#ff0000';
+                    e.currentTarget.style.borderColor = '#ff0000';
+                    e.currentTarget.style.textShadow = '0 0 5px #ff0000';
+                    e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 0, 0, 0.3)';
                 }}
                 onMouseLeave={(e) => {
                     e.currentTarget.style.color = '#888';
@@ -114,7 +114,7 @@ export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
                     e.currentTarget.style.boxShadow = 'none';
                 }}
             >
-                [X] CLOSE
+                <span style={{ color: '#ff0000' }}>[X]</span> CLOSE
             </Box>
 
             <Center onClick={(e) => e.stopPropagation()}>
@@ -126,9 +126,9 @@ export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
                                 fw={700} 
                                 style={{ 
                                     fontFamily: 'monospace',
-                                    color: '#00ff00',
-                                    textShadow: '0 0 10px #00ff00',
-                                    animation: 'glow 2s ease-in-out infinite alternate',
+                                    color: '#ff0000',
+                                    textShadow: '0 0 10px #ff0000',
+                                    animation: 'glowRed 2s ease-in-out infinite alternate',
                                     letterSpacing: '2px'
                                 }}
                             >
@@ -139,7 +139,7 @@ export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
                                 size="lg" 
                                 style={{ 
                                     fontFamily: 'monospace',
-                                    color: '#ffff00',
+                                    color: '#ff0000',
                                     animation: 'typewriter 3s steps(40) 1s both'
                                 }}
                             >
@@ -187,7 +187,7 @@ export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
                                 letterSpacing: '0.5px'
                             }}
                         >
-                            [ESC] or [TAP_ANYWHERE] to return to terminal...
+                            <span style={{ color: '#ff0000' }}>[ESC]</span> or <span style={{ color: '#ff0000' }}>[TAP_ANYWHERE]</span> to return to terminal...
                         </Text>
                     )}
                 </Stack>
@@ -197,6 +197,11 @@ export function QuestCompletion({ isVisible, onClose }: QuestCompletionProps) {
                 @keyframes glow {
                     from { text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; }
                     to { text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00; }
+                }
+                
+                @keyframes glowRed {
+                    from { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000; }
+                    to { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000; }
                 }
                 
                 @keyframes typewriter {
