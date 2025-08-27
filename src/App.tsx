@@ -17,6 +17,7 @@ import { fetchPlayerQuests } from './services/wikiSync';
 import type { PlayerQuestData } from './services/wikiSync';
 import { useQuestRequirements } from './hooks/useQuestRequirements';
 import { quests } from './data/quests';
+import { filterOutMiniQuests } from './data/miniQuests';
 import './App.css';
 
 // Version info
@@ -105,22 +106,34 @@ export default function App() {
   const checkAllQuestsComplete = (questData: PlayerQuestData): boolean => {
     if (!questData || !questData.quests) return false;
     
-    // Get list of completed quest names
-    const completedQuests = new Set(questData.quests.map(q => q.name.toLowerCase()));
-    
-    // Check if all quests from our data are completed
-    return quests.every(quest => completedQuests.has(quest.name.toLowerCase()));
+    // Use the same logic as QuestList - filter out mini quests and find next quest
+    const trackableQuests = filterOutMiniQuests(quests);
+    const nextQuest = trackableQuests.find(orderedQuest => {
+        const playerQuest = questData.quests.find(pq => pq.name === orderedQuest.name);
+        // If the player doesn't have this quest in their list, or it's not completed, show it
+        return !playerQuest || playerQuest.status !== 'COMPLETE';
+    });
+
+    // If no next quest found, all quests are complete!
+    return !nextQuest;
   };
 
   // Effect to check for completion when quest data changes
   useEffect(() => {
-    if (questData && checkAllQuestsComplete(questData)) {
-      // Delay showing completion screen for dramatic effect
-      setTimeout(() => {
-        setShowCompletion(true);
-      }, 2000);
-    } else {
-      setShowCompletion(false);
+    if (questData) {
+      const isComplete = checkAllQuestsComplete(questData);
+      console.log('Quest completion check:', isComplete);
+      console.log('Player has', questData.quests.length, 'quests');
+      
+      if (isComplete) {
+        console.log('All quests completed! Showing completion screen...');
+        // Delay showing completion screen for dramatic effect
+        setTimeout(() => {
+          setShowCompletion(true);
+        }, 2000);
+      } else {
+        setShowCompletion(false);
+      }
     }
   }, [questData]);
 
@@ -141,6 +154,7 @@ export default function App() {
     const handleKeyCombo = (event: KeyboardEvent) => {
       // Ctrl + Shift + G for "Grass" 🌱
       if (event.ctrlKey && event.shiftKey && event.key === 'G') {
+        console.log('Manual grass trigger activated!');
         setShowCompletion(true);
         event.preventDefault();
       }
