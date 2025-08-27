@@ -16,6 +16,7 @@ export const MINI_QUESTS = [
     "Lair of Tarn Razorlor", // Miniquest in Haunted Mine
     "Curse of the Empty Lord", // Miniquest
     "The General's Shadow", // Miniquest
+    "Knight Waves Training Grounds", // Training activity/miniquest
     
     // Add more as needed
 ];

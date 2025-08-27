@@ -663,7 +663,6 @@ export const quests: Quest[] = [
             skills: { "Magic": 45 }
         }
     },
-    { name: "Knight Waves Training Grounds" },
     {
         name: "Swan Song",
         requirements: {
