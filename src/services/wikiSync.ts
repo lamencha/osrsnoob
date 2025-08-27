@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { isMiniQuest } from '../data/miniQuests';
 
 const WIKI_SYNC_API = 'https://sync.runescape.wiki/runelite/player/';
 
@@ -146,6 +147,7 @@ export const fetchPlayerQuests = async (username: string, options: FetchOptions 
         // Data transformation with validation
         const quests: QuestStatus[] = Object.entries(response.data.quests)
             .filter(([name]) => name) // Filter out any empty quest names
+            .filter(([name]) => !isMiniQuest(name)) // Filter out mini quests that can't be tracked
             .map(([name, status]) => ({
                 name,
                 status: status === 2 ? 'COMPLETE' as const : 

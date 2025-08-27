@@ -1,5 +1,6 @@
 import { Box, Text } from '@mantine/core';
 import { quests } from '../data/quests';
+import { filterOutMiniQuests } from '../data/miniQuests';
 import type { Quest, QuestRequirement } from '../types';
 import { QuestCard } from './QuestCard';
 
@@ -10,8 +11,11 @@ interface QuestListProps {
 }
 
 export function QuestList({ quests: playerQuests, playerLevels, questRequirements }: QuestListProps) {
+    // Filter out mini quests that can't be tracked reliably
+    const trackableQuests = filterOutMiniQuests(quests);
+    
     // Find the first quest from our ordered quest list that the player hasn't completed
-    const nextQuest = quests.find(orderedQuest => {
+    const nextQuest = trackableQuests.find(orderedQuest => {
         // Find the corresponding quest in the player's quest list
         const playerQuest = playerQuests.find(pq => pq.name === orderedQuest.name);
         

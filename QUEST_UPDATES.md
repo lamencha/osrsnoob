@@ -7,6 +7,21 @@ This document explains how to keep the quest list up-to-date.
 - **File**: `src/data/quests.ts`
 - **Order**: Array order determines quest priority
 - **Source**: [OSRS Wiki Optimal Quest Guide](https://oldschool.runescape.wiki/w/Optimal_quest_guide)
+- **Mini Quest Handling**: Mini quests are filtered out (see `src/data/miniQuests.ts`)
+
+## Mini Quests
+
+Mini quests like "Natural History Quiz", "Children of the Sun", and "Daddy's Home" cannot be tracked via the RuneLite Wiki plugin API. These are automatically filtered out to prevent confusion.
+
+**Filtered Mini Quests:**
+- Natural History Quiz
+- Children of the Sun
+- Daddy's Home
+- Alfred Grimhand's Barcrawl
+- A Soul's Bane
+- Lair of Tarn Razorlor
+- Curse of the Empty Lord
+- The General's Shadow
 
 ## How to Update
 

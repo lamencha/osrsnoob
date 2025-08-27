@@ -1,12 +1,16 @@
 import { quests } from '../data/quests';
+import { filterOutMiniQuests } from '../data/miniQuests';
 
 interface NextQuestProps {
     completedQuests: string[];
 }
 
 export const NextQuest = ({ completedQuests }: NextQuestProps) => {
+    // Filter out mini quests that can't be tracked reliably
+    const trackableQuests = filterOutMiniQuests(quests);
+    
     // Get first incomplete quest from our ordered list
-    const nextQuest = quests.find(quest => !completedQuests.includes(quest.name));
+    const nextQuest = trackableQuests.find(quest => !completedQuests.includes(quest.name));
 
     if (!nextQuest) {
         return <div>All quests completed!</div>;
