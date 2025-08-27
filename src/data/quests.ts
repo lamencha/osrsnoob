@@ -47,7 +47,7 @@ export const quests: Quest[] = [
     { name: "Romeo & Juliet" },
     { name: "Ernest the Chicken" },
     { name: "Demon Slayer" },
-    { name: "Vampire Slayer", requirements: { skills: { "Attack": 45 } } },
+    { name: "Vampyre Slayer", requirements: { skills: { "Attack": 45 } } },
 
     // === EARLY COMBAT & UNLOCKS ===
     { name: "Dwarf Cannon" },
@@ -317,7 +317,7 @@ export const quests: Quest[] = [
     { name: "Forgettable Tale..." },
     { name: "Another Slice of H.A.M." },
     {
-        name: "Vampire Slayer",
+        name: "Vampyre Slayer",
         requirements: {
             skills: { "Attack": 45 }
         }

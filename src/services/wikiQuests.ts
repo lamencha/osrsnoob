@@ -290,7 +290,7 @@ export async function initializeQuestRequirements(): Promise<Record<string, Ques
         "Rune Mysteries",
         "Sheep Shearer",
         "Shield of Arrav",
-        "Vampire Slayer",
+        "Vampyre Slayer",
         "Witch's Potion",
         "X Marks the Spot"
     ];

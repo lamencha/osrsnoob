@@ -22,7 +22,7 @@ const __dirname = path.dirname(__filename);
 // Common OSRS quests that might be missing from our list
 const commonQuests = [
     "Cook's Assistant", "Sheep Shearer", "Romeo & Juliet", "Demon Slayer",
-    "Ernest the Chicken", "Vampire Slayer", "Imp Catcher", "Witch's Potion",
+    "Ernest the Chicken", "Vampyre Slayer", "Imp Catcher", "Witch's Potion",
     "Rune Mysteries", "The Restless Ghost", "Goblin Diplomacy", "Pirates' Treasure",
     "Dragon Slayer I", "Black Knights' Fortress", "Prince Ali Rescue",
     "Doric's Quest", "Witch's House", "The Knight's Sword", "Gertrude's Cat",
