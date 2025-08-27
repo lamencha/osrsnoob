@@ -41,6 +41,11 @@ export default function App() {
   const [questData, setQuestData] = useState<PlayerQuestData | null>(null);
   const [showCompletion, setShowCompletion] = useState(false);
   
+  // Mobile install prompt state
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [dontAskAgain, setDontAskAgain] = useState(false);
+  
   // Load saved username and remember setting on app start
   useEffect(() => {
     const savedUsername = localStorage.getItem('osrsnoob-username');
@@ -132,6 +137,83 @@ export default function App() {
     const input = document.querySelector('input[type="text"]') as HTMLInputElement;
     input?.focus();
   }, []);
+
+  // Mobile install prompt detection
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later
+      setDeferredPrompt(e);
+      
+      // Check if user is on mobile and hasn't dismissed the prompt
+      const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const hasDeclined = localStorage.getItem('osrsnoob-install-declined') === 'true';
+      
+      if (isMobile && !hasDeclined) {
+        setShowInstallPrompt(true);
+      }
+    };
+
+    // Also check for mobile without the beforeinstallprompt event (iOS Safari)
+    const checkMobileAndShow = () => {
+      const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const hasDeclined = localStorage.getItem('osrsnoob-install-declined') === 'true';
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      
+      // Show prompt for mobile users who haven't declined and aren't already in standalone mode
+      if (isMobile && !hasDeclined && !isStandalone && !deferredPrompt) {
+        setTimeout(() => setShowInstallPrompt(true), 2000); // Show after 2 seconds
+      }
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    
+    // Check on load for iOS and other mobile browsers
+    checkMobileAndShow();
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, [deferredPrompt]);
+
+  // Handle install prompt actions
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) {
+      // For iOS and other browsers without native install prompt
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) {
+        alert('To install this app on iOS:\n1. Tap the Share button in Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm');
+      } else {
+        alert('To install this app:\n1. Look for an "Install" or "Add to Home Screen" option in your browser menu\n2. Follow the prompts to add to your home screen');
+      }
+      setShowInstallPrompt(false);
+      return;
+    }
+    
+    // Show the install prompt
+    deferredPrompt.prompt();
+    
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    // Clear the deferredPrompt
+    setDeferredPrompt(null);
+    setShowInstallPrompt(false);
+    
+    if (outcome === 'dismissed') {
+      console.log('User dismissed the install prompt');
+    } else {
+      console.log('User accepted the install prompt');
+    }
+  };
+
+  const handleDismissInstallPrompt = () => {
+    setShowInstallPrompt(false);
+    if (dontAskAgain) {
+      localStorage.setItem('osrsnoob-install-declined', 'true');
+    }
+  };
   const { requirements: questRequirements, loading: loadingRequirements } = useQuestRequirements();
 
   // Check if all quests are completed
@@ -279,6 +361,49 @@ export default function App() {
 
   return (
     <MantineProvider theme={{ primaryColor: 'blue' }}>
+      {/* Mobile Install Prompt */}
+      {showInstallPrompt && (
+        <div className="install-prompt-overlay">
+          <div className="install-prompt-modal">
+            <div className="install-prompt-header">
+              <div className="terminal-prompt">~ $ install osrsnoob</div>
+            </div>
+            <div className="install-prompt-content">
+              <Text className="install-prompt-text">
+                ◢ Add OSRS NOOB to your home screen for a better mobile experience! ◣
+              </Text>
+              <Text size="sm" className="install-prompt-subtext">
+                Access quests instantly without opening your browser.
+              </Text>
+              <div className="install-prompt-buttons">
+                <Button 
+                  variant="filled" 
+                  className="install-button"
+                  onClick={handleInstallApp}
+                >
+                  Install App
+                </Button>
+                <Button 
+                  variant="subtle" 
+                  className="dismiss-button"
+                  onClick={handleDismissInstallPrompt}
+                >
+                  Not Now
+                </Button>
+              </div>
+              <div className="dont-ask-checkbox">
+                <Checkbox
+                  checked={dontAskAgain}
+                  onChange={(event) => setDontAskAgain(event.currentTarget.checked)}
+                  label="Don't ask me again"
+                  size="sm"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <Container size="sm" py="xl" px="md">
         <Paper shadow="sm" p="xl" radius="md" withBorder>
           <Box mb="3rem" style={{ textAlign: 'center' }}>

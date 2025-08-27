@@ -1,0 +1,39 @@
+{
+  "name": "OSRS NOOB Quest Helper",
+  "short_name": "OSRS NOOB",
+  "description": "Find your next optimal quest in Old School RuneScape",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0c0c",
+  "theme_color": "#00ff41",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/noob.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["games", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Find Next Quest",
+      "short_name": "Next Quest",
+      "description": "Find your next optimal quest",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/noob.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
