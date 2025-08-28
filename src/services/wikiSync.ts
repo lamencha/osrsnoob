@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { isMiniQuest } from '../data/miniQuests';
+import { SecurityUtils } from '../utils/security';
 
 const WIKI_SYNC_API = 'https://sync.runescape.wiki/runelite/player/';
 
@@ -27,7 +28,7 @@ interface PlayerCacheData {
 
 // Get cached player data
 function getCachedPlayerData(username: string): PlayerQuestData | null {
-    const cached = localStorage.getItem(PLAYER_CACHE_KEY);
+    const cached = SecurityUtils.getLocalStorage(PLAYER_CACHE_KEY);
     if (!cached) return null;
 
     try {
@@ -40,7 +41,7 @@ function getCachedPlayerData(username: string): PlayerQuestData | null {
         if (now - userData.timestamp > PLAYER_CACHE_DURATION) {
             // Remove expired cache entry
             delete cacheData[username.toLowerCase()];
-            localStorage.setItem(PLAYER_CACHE_KEY, JSON.stringify(cacheData));
+            SecurityUtils.setLocalStorage(PLAYER_CACHE_KEY, JSON.stringify(cacheData));
             return null;
         }
 
@@ -53,7 +54,7 @@ function getCachedPlayerData(username: string): PlayerQuestData | null {
 // Cache player data
 function cachePlayerData(username: string, data: PlayerQuestData) {
     try {
-        const cached = localStorage.getItem(PLAYER_CACHE_KEY);
+        const cached = SecurityUtils.getLocalStorage(PLAYER_CACHE_KEY);
         const cacheData: Record<string, PlayerCacheData> = cached ? JSON.parse(cached) : {};
         
         // Clean up expired entries
@@ -71,9 +72,9 @@ function cachePlayerData(username: string, data: PlayerQuestData) {
             data
         };
 
-        localStorage.setItem(PLAYER_CACHE_KEY, JSON.stringify(cacheData));
+        SecurityUtils.setLocalStorage(PLAYER_CACHE_KEY, JSON.stringify(cacheData));
     } catch (error) {
-        console.error('Failed to cache player data:', error);
+        SecurityUtils.error('Failed to cache player data:', error);
     }
 }
 
@@ -91,7 +92,7 @@ export const fetchPlayerQuests = async (username: string, options: FetchOptions 
     }
 
     // Clean the username - remove extra spaces and special characters
-    const cleanUsername = username.trim();
+    const cleanUsername = SecurityUtils.sanitizeUsername(username);
     if (cleanUsername.length === 0) {
         throw new Error('Username cannot be empty');
     }
@@ -177,12 +178,11 @@ export const fetchPlayerQuests = async (username: string, options: FetchOptions 
 
         return playerData;
     } catch (error: any) {
-        console.error('Error fetching quest data:', {
-            error,
+        SecurityUtils.error('Error fetching quest data:', {
             username: cleanUsername,
             attempt: retryCount + 1,
             status: error.response?.status,
-            data: error.response?.data
+            message: error.message
         });
 
         // Handle specific error cases
@@ -200,7 +200,7 @@ export const fetchPlayerQuests = async (username: string, options: FetchOptions 
         if (error.response?.status === 500) {
             const serverError = error.response?.data?.error || 'Internal server error';
             if (retryCount < MAX_RETRIES) {
-                console.log(`Retrying after server error (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
+                SecurityUtils.log(`Retrying after server error (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
                 await sleep(RETRY_DELAY * (retryCount + 1));
                 return fetchPlayerQuests(cleanUsername, { retryCount: retryCount + 1 });
             }
@@ -209,7 +209,7 @@ export const fetchPlayerQuests = async (username: string, options: FetchOptions 
         
         if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
             if (retryCount < MAX_RETRIES) {
-                console.log(`Retrying after timeout (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
+                SecurityUtils.log(`Retrying after timeout (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
                 await sleep(RETRY_DELAY * (retryCount + 1));
                 return fetchPlayerQuests(cleanUsername, { retryCount: retryCount + 1 });
             }
@@ -261,7 +261,7 @@ export const fetchPlayerQuests = async (username: string, options: FetchOptions 
         }
 
         // For any other error, retry if we haven't hit the limit
-        console.log(`Retrying after error (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
+        SecurityUtils.log(`Retrying after error (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
         await sleep(RETRY_DELAY * (retryCount + 1));
         return fetchPlayerQuests(cleanUsername, { retryCount: retryCount + 1 });
     }

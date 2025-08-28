@@ -2,6 +2,7 @@ import { Paper, Text, Badge, Box } from '@mantine/core';
 import { useState, useEffect } from 'react';
 import type { Quest, QuestRequirement, SkillRequirement } from '../types';
 import { getStatusColor, getDifficultyColor, getDifficultyLabel } from '../utils/questUtils';
+import { SecurityUtils } from '../utils/security';
 
 // Animated Access Status Component
 function AnimatedAccessStatus({ onAccessGranted }: { onAccessGranted?: () => void }) {
@@ -122,20 +123,10 @@ function DelayedRequirementsDisplay({
                         
                         const handleSkillClick = () => {
                             const searchQuery = `osrs level 99 ${req.skill.toLowerCase()} guide ${currentYear}`;
-                            const youtubeUrl = `youtube://results?search_query=${encodeURIComponent(searchQuery)}`;
                             const fallbackUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
                             
-                            // Create a hidden iframe to try the YouTube app
-                            const iframe = document.createElement('iframe');
-                            iframe.style.display = 'none';
-                            iframe.src = youtubeUrl;
-                            document.body.appendChild(iframe);
-                            
-                            // Open web version in new tab as fallback
-                            setTimeout(() => {
-                                window.open(fallbackUrl, '_blank');
-                                document.body.removeChild(iframe);
-                            }, 500);
+                            // Use secure URL opening
+                            SecurityUtils.safeOpenUrl(fallbackUrl);
                         };
 
                         return (
@@ -479,20 +470,10 @@ export function QuestCard({ quest, playerLevels, quests, questRequirements }: Qu
                                                 
                                                 const handleSkillClick = () => {
                                                     const searchQuery = `osrs level 99 ${req.skill.toLowerCase()} guide ${currentYear}`;
-                                                    const youtubeUrl = `youtube://results?search_query=${encodeURIComponent(searchQuery)}`;
                                                     const fallbackUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
                                                     
-                                                    // Create a hidden iframe to try the YouTube app
-                                                    const iframe = document.createElement('iframe');
-                                                    iframe.style.display = 'none';
-                                                    iframe.src = youtubeUrl;
-                                                    document.body.appendChild(iframe);
-                                                    
-                                                    // Open web version in new tab as fallback
-                                                    setTimeout(() => {
-                                                        window.open(fallbackUrl, '_blank');
-                                                        document.body.removeChild(iframe);
-                                                    }, 500);
+                                                    // Use secure URL opening
+                                                    SecurityUtils.safeOpenUrl(fallbackUrl);
                                                 };
 
                                                 return (

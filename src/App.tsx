@@ -19,6 +19,7 @@ import type { PlayerQuestData } from './services/wikiSync';
 import { useQuestRequirements } from './hooks/useQuestRequirements';
 import { quests } from './data/quests';
 import { filterOutMiniQuests } from './data/miniQuests';
+import { SecurityUtils } from './utils/security';
 import './App.css';
 
 // Version info
@@ -48,11 +49,11 @@ export default function App() {
   
   // Load saved username and remember setting on app start
   useEffect(() => {
-    const savedUsername = localStorage.getItem('osrsnoob-username');
-    const savedRememberSetting = localStorage.getItem('osrsnoob-remember-username');
+    const savedUsername = SecurityUtils.getLocalStorage('osrsnoob-username');
+    const savedRememberSetting = SecurityUtils.getLocalStorage('osrsnoob-remember-username');
     
     if (savedUsername && savedRememberSetting === 'true') {
-      setUsername(savedUsername);
+      setUsername(SecurityUtils.sanitizeUsername(savedUsername));
       setRememberUsername(true);
     }
   }, []);
@@ -148,7 +149,7 @@ export default function App() {
       
       // Check if user is on mobile and hasn't dismissed the prompt
       const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const hasDeclined = localStorage.getItem('osrsnoob-install-declined') === 'true';
+      const hasDeclined = SecurityUtils.getLocalStorage('osrsnoob-install-declined') === 'true';
       
       if (isMobile && !hasDeclined) {
         setShowInstallPrompt(true);
@@ -158,7 +159,7 @@ export default function App() {
     // Also check for mobile without the beforeinstallprompt event (iOS Safari)
     const checkMobileAndShow = () => {
       const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      const hasDeclined = localStorage.getItem('osrsnoob-install-declined') === 'true';
+      const hasDeclined = SecurityUtils.getLocalStorage('osrsnoob-install-declined') === 'true';
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
       
       // Show prompt for mobile users who haven't declined and aren't already in standalone mode
@@ -202,16 +203,16 @@ export default function App() {
     setShowInstallPrompt(false);
     
     if (outcome === 'dismissed') {
-      console.log('User dismissed the install prompt');
+      SecurityUtils.log('User dismissed the install prompt');
     } else {
-      console.log('User accepted the install prompt');
+      SecurityUtils.log('User accepted the install prompt');
     }
   };
 
   const handleDismissInstallPrompt = () => {
     setShowInstallPrompt(false);
     if (dontAskAgain) {
-      localStorage.setItem('osrsnoob-install-declined', 'true');
+      SecurityUtils.setLocalStorage('osrsnoob-install-declined', 'true');
     }
   };
   const { requirements: questRequirements, loading: loadingRequirements } = useQuestRequirements();
@@ -236,11 +237,11 @@ export default function App() {
   useEffect(() => {
     if (questData) {
       const isComplete = checkAllQuestsComplete(questData);
-      console.log('Quest completion check:', isComplete);
-      console.log('Player has', questData.quests.length, 'quests');
+      SecurityUtils.log('Quest completion check:', isComplete);
+      SecurityUtils.log(`Player has ${questData.quests.length} quests`);
       
       if (isComplete) {
-        console.log('All quests completed! Showing completion screen...');
+        SecurityUtils.log('All quests completed! Showing completion screen...');
         // Delay showing completion screen for dramatic effect
         setTimeout(() => {
           setShowCompletion(true);
@@ -268,7 +269,7 @@ export default function App() {
     const handleKeyCombo = (event: KeyboardEvent) => {
       // Ctrl + Shift + G for "Grass" 🌱
       if (event.ctrlKey && event.shiftKey && event.key === 'G') {
-        console.log('Manual grass trigger activated!');
+        SecurityUtils.log('Manual grass trigger activated!');
         setShowCompletion(true);
         event.preventDefault();
       }
@@ -297,23 +298,24 @@ export default function App() {
   // Handle remember username functionality
   const handleRememberUsernameChange = (checked: boolean) => {
     setRememberUsername(checked);
-    localStorage.setItem('osrsnoob-remember-username', checked.toString());
+    SecurityUtils.setLocalStorage('osrsnoob-remember-username', checked.toString());
     
     if (checked && username) {
       // Save current username
-      localStorage.setItem('osrsnoob-username', username);
+      SecurityUtils.setLocalStorage('osrsnoob-username', SecurityUtils.sanitizeUsername(username));
     } else if (!checked) {
       // Clear saved username
-      localStorage.removeItem('osrsnoob-username');
+      SecurityUtils.getLocalStorage('osrsnoob-username') && localStorage.removeItem('osrsnoob-username');
     }
   };
 
   const handleUsernameChange = (newUsername: string) => {
-    setUsername(newUsername);
+    const sanitized = SecurityUtils.sanitizeUsername(newUsername);
+    setUsername(sanitized);
     
     // If remember is enabled, save immediately
     if (rememberUsername) {
-      localStorage.setItem('osrsnoob-username', newUsername);
+      SecurityUtils.setLocalStorage('osrsnoob-username', sanitized);
     }
   };
 
@@ -323,7 +325,7 @@ export default function App() {
 
     // Save username if remember is enabled
     if (rememberUsername) {
-      localStorage.setItem('osrsnoob-username', username);
+      SecurityUtils.setLocalStorage('osrsnoob-username', SecurityUtils.sanitizeUsername(username));
     }
 
     setLoading(true);
