@@ -2,16 +2,20 @@
 export class SecurityUtils {
   /**
    * Sanitize username input to prevent injection attacks
+   * OSRS usernames can contain spaces, letters, numbers, and some special chars
    */
   static sanitizeUsername(username: string): string {
     if (!username || typeof username !== 'string') return '';
     
-    // Remove dangerous characters and limit length
+    // OSRS usernames can be up to 12 characters and contain:
+    // - Letters (a-z, A-Z)
+    // - Numbers (0-9) 
+    // - Spaces
+    // - Some special characters: - _ 
     return username
-      .trim()
       .slice(0, 12) // OSRS max username length
-      .replace(/[<>'"&`]/g, '') // Remove potentially dangerous chars
-      .replace(/\s+/g, ' '); // Normalize whitespace
+      .replace(/[<>'"&`]/g, '') // Remove only dangerous XSS chars, keep spaces
+      .trim(); // Only trim leading/trailing spaces
   }
 
   /**
