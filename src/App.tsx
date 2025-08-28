@@ -310,12 +310,13 @@ export default function App() {
   };
 
   const handleUsernameChange = (newUsername: string) => {
-    const sanitized = SecurityUtils.sanitizeUsername(newUsername);
-    setUsername(sanitized);
+    // Allow free typing, only limit length during input
+    const limitedUsername = newUsername.slice(0, 12); // OSRS max length
+    setUsername(limitedUsername);
     
-    // If remember is enabled, save immediately
+    // If remember is enabled, save immediately (but sanitize for storage)
     if (rememberUsername) {
-      SecurityUtils.setLocalStorage('osrsnoob-username', sanitized);
+      SecurityUtils.setLocalStorage('osrsnoob-username', SecurityUtils.sanitizeUsername(limitedUsername));
     }
   };
 
