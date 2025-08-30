@@ -29,7 +29,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://sync.runescape.wiki https://oldschool.runescape.wiki; font-src 'self'; frame-ancestors 'self' https://maidenless.vercel.app; object-src 'none'; base-uri 'self'; form-action 'self';"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://sync.runescape.wiki https://oldschool.runescape.wiki; font-src 'self'; frame-ancestors 'self' https://mbpodcast.vercel.app; object-src 'none'; base-uri 'self'; form-action 'self';"
         }
       ]
     }
