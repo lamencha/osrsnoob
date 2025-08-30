@@ -4,23 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="
-      default-src 'self';
-      script-src 'self' 'unsafe-inline';
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https:;
-      connect-src 'self' https://sync.runescape.wiki https://oldschool.runescape.wiki;
-      font-src 'self';
-      frame-ancestors 'self' https://mbpodcast.vercel.app;
-      object-src 'none';
-      base-uri 'self';
-      form-action 'self';
-    " />
+    <!-- Only meta tags that work effectively in meta elements -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="ALLOWALL" />
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
     
     <!-- Icons and PWA -->
     <link rel="icon" type="image/svg+xml" href="/noob.svg" />
